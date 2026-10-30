@@ -1,0 +1,28 @@
+services:
+  - type: web                # бесплатный план есть только у web-сервисов
+    name: boxing-life-bot
+    runtime: python
+    region: frankfurt
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot.py
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: BOT_TOKEN       # вводится вручную в панели Render
+        sync: false
+      - key: CREATOR_TELEGRAM_ID
+        sync: false
+      - key: PYTHON_VERSION
+        value: 3.12.3
+
+    # --- Чтобы прогресс игроков не пропадал при перезапусках (платный план) ---
+    # 1) поменяйте plan: free  ->  plan: starter
+    # 2) раскомментируйте блок ниже и переменную DB_PATH
+    # disk:
+    #   name: boxing-data
+    #   mountPath: /data
+    #   sizeGB: 1
+    # и добавьте в envVars:
+    #   - key: DB_PATH
+    #     value: /data/boxing_life.db
